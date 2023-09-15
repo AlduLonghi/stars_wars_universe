@@ -14,6 +14,6 @@ export class Character {
     @Column()
     sensitivity_to_the_force:string
 
-    @Column()
-    current_location:string;
+    // @Column()
+    // current_location:string;
 }

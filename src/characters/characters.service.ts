@@ -14,7 +14,9 @@ export class CharactersService {
   ) { }
 
   async create(createCharacterDto: CreateCharacterDto) {
-    return 'This action adds a new character';
+    // creatre makes dto validations to entity
+    const character = this.characterRepository.create(createCharacterDto)
+    return await this.characterRepository.save(character)
   }
 
   async findAll() {
@@ -22,14 +24,15 @@ export class CharactersService {
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} character`;
+    return this.characterRepository.findOneBy({ id })
   }
 
   async update(id: number, updateCharacterDto: UpdateCharacterDto) {
-    return `This action updates a #${id} character`;
+    return this.characterRepository.update(id, updateCharacterDto)
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} character`;
+    await this.characterRepository.findOneBy({ id })
+    return this.characterRepository.delete({ id })
   }
 }
