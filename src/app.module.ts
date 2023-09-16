@@ -3,10 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CharactersModule } from './characters/characters.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PlanetsModule } from './planets/planets.module';
 
 @Module({
   imports: [
     CharactersModule,
+    PlanetsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
