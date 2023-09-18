@@ -27,6 +27,13 @@ export class CharactersController {
     return this.charactersService.update(id, updateCharacterDto);
   }
 
+  @Patch(':id/relocate/:planetId')
+  relocateCharacter(
+    @Param('id') id: number,
+    @Param('planetId') planetId: number) {
+    return this.charactersService.relocateCharacter(id, planetId);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.charactersService.remove(id);

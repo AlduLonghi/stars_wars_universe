@@ -1,5 +1,6 @@
+import { Starship } from 'src/starships/entities/starship.entity';
 import { Planet } from '../../planets/entities/planet.entity';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
 @Entity()
 export class Character {
@@ -18,6 +19,10 @@ export class Character {
     @ManyToOne(() => Planet, (planet) => planet.population, {
         eager: true,
     })
-    @JoinColumn()
     current_location?: Planet;
+
+    @ManyToOne(() => Starship, (starship) => starship.passengers, {
+        cascade: true,
+    })
+    starship:Starship;
 }
