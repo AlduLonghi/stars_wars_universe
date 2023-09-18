@@ -6,8 +6,11 @@ import { Character } from './entities/character.entity';
 import { Planet } from 'src/planets/entities/planet.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Character]), TypeOrmModule.forFeature([Planet]),],
+  imports: [
+    TypeOrmModule.forFeature([Character]),
+    TypeOrmModule.forFeature([Planet]),
+  ],
   controllers: [CharactersController],
   providers: [CharactersService],
 })
-export class CharactersModule {};
+export class CharactersModule {}

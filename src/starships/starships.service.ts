@@ -9,18 +9,18 @@ import { Starship } from './entities/starship.entity';
 export class StarshipsService {
   constructor(
     @InjectRepository(Starship)
-    private readonly starshipRepository: Repository<Starship>
-  ){}
+    private readonly starshipRepository: Repository<Starship>,
+  ) {}
 
-  async findStarshipById(id:number) {
-    const starshipExists = await this.starshipRepository.findOneBy({ id })
+  async findStarshipById(id: number) {
+    const starshipExists = await this.starshipRepository.findOneBy({ id });
 
     if (!starshipExists) {
-      throw new NotFoundException(`starship with ID ${id} not found`)
+      throw new NotFoundException(`starship with ID ${id} not found`);
     }
   }
   async create(createStarshipDto: CreateStarshipDto) {
-    const starship = await this.starshipRepository.create(createStarshipDto)
+    const starship = await this.starshipRepository.create(createStarshipDto);
     return await this.starshipRepository.save(starship);
   }
 
@@ -33,12 +33,12 @@ export class StarshipsService {
   }
 
   async update(id: number, updateStarshipDto: UpdateStarshipDto) {
-    await this.findStarshipById(id)
-    return await this.starshipRepository.update(id, updateStarshipDto)
+    await this.findStarshipById(id);
+    return await this.starshipRepository.update(id, updateStarshipDto);
   }
 
   async remove(id: number) {
-    await this.findStarshipById(id)
+    await this.findStarshipById(id);
     return await this.starshipRepository.delete(id);
   }
 }

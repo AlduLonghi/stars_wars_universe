@@ -9,36 +9,36 @@ import { Repository } from 'typeorm';
 export class PlanetsService {
   constructor(
     @InjectRepository(Planet)
-    private readonly planetRepository: Repository<Planet>
+    private readonly planetRepository: Repository<Planet>,
   ) {}
 
   create(createPlanetDto: CreatePlanetDto) {
-    const planet = this.planetRepository.create(createPlanetDto)
-    return this.planetRepository.save(planet)
+    const planet = this.planetRepository.create(createPlanetDto);
+    return this.planetRepository.save(planet);
   }
 
   findAll() {
-    return this.planetRepository.find()
+    return this.planetRepository.find();
   }
 
   findOne(id: number) {
     const planet = this.planetRepository
-    .createQueryBuilder('planet')
-    .where('planet.id=:id', { id })
-    .leftJoinAndSelect('planet.population', 'characters')
-    .loadRelationCountAndMap('planet.population', 'planet.population')
-    .getOne()
+      .createQueryBuilder('planet')
+      .where('planet.id=:id', { id })
+      .leftJoinAndSelect('planet.population', 'characters')
+      .loadRelationCountAndMap('planet.population', 'planet.population')
+      .getOne();
 
-    return planet
+    return planet;
   }
 
   update(id: number, updatePlanetDto: UpdatePlanetDto) {
-    const planet = this.planetRepository.create(updatePlanetDto)
-    return this.planetRepository.update(id, planet)
+    // const planet = this.planetRepository.create(updatePlanetDto);
+    return this.planetRepository.update(id, updatePlanetDto);
   }
 
   remove(id: number) {
-    this.planetRepository.findOneBy({ id })
+    this.planetRepository.findOneBy({ id });
     return this.planetRepository.delete({ id });
   }
 }

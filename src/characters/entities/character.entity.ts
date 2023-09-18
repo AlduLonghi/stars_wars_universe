@@ -1,28 +1,28 @@
-import { Starship } from 'src/starships/entities/starship.entity';
+import { Starship } from '../..//starships/entities/starship.entity';
 import { Planet } from '../../planets/entities/planet.entity';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Character {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name:string;
+  @Column()
+  name: string;
 
-    @Column()
-    species:string;
+  @Column()
+  species: string;
 
-    @Column()
-    sensitivity_to_the_force:string
+  @Column()
+  sensitivity_to_the_force: string;
 
-    @ManyToOne(() => Planet, (planet) => planet.population, {
-        eager: true,
-    })
-    current_location?: Planet;
+  @ManyToOne(() => Planet, (planet) => planet.population, {
+    eager: true,
+  })
+  current_location?: Planet;
 
-    @ManyToOne(() => Starship, (starship) => starship.passengers, {
-        cascade: true,
-    })
-    starship:Starship;
+  @ManyToOne(() => Starship, (starship) => starship.passengers, {
+    cascade: true,
+  })
+  starship: Starship;
 }

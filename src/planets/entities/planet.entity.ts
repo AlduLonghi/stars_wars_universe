@@ -4,20 +4,20 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 @Entity()
 export class Planet {
   @PrimaryGeneratedColumn()
-  id:number; 
- 
-  @Column()
-  name:string;
+  id: number;
 
   @Column()
-  climate:string;
+  name: string;
 
   @Column()
-  terrain:string;
+  climate: string;
+
+  @Column()
+  terrain: string;
 
   @OneToMany(() => Character, (character) => character.current_location)
   population: Character[];
 
   @Column()
-  coordinates:string;
+  coordinates: string;
 }
