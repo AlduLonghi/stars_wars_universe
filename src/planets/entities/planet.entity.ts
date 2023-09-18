@@ -1,5 +1,5 @@
-import { Character } from 'src/characters/entities/character.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from 'typeorm';
+import { Character } from '../../characters/entities/character.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class Planet {
@@ -15,8 +15,9 @@ export class Planet {
   @Column()
   terrain:string;
 
-  @OneToMany(() => Character, (character) => character.current_location, {
-    eager: true,
-  })
+  @OneToMany(() => Character, (character) => character.current_location)
   population: Character[];
+
+  @Column()
+  coordinates:string;
 }

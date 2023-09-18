@@ -1,6 +1,5 @@
 import { IsString, Length } from 'class-validator';
-import { Geometry } from 'geojson';
-import { Character } from 'src/characters/entities/character.entity';
+import { IsValidCoordinatesFormat } from '../../common/decorators/coordinates.decorator';
 
 export class CreatePlanetDto {
     @IsString()
@@ -13,6 +12,7 @@ export class CreatePlanetDto {
     @IsString()
     terrain:string;
 
-    population:Character[];
-    // current_location:Geometry;
+    @IsString()
+    @IsValidCoordinatesFormat()
+    coordinates:string;
 }

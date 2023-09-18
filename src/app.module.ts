@@ -10,12 +10,12 @@ import { PlanetsModule } from './planets/planets.module';
     CharactersModule,
     PlanetsModule,
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
+      type: "mysql",
+      host: "localhost",
       port: 3307,
       username: "user_crud",
       password: "root",
-      database: 'db_crud',
+      database: "db_crud",
       autoLoadEntities: true,
       synchronize: true,
     })

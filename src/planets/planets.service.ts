@@ -22,11 +22,19 @@ export class PlanetsService {
   }
 
   findOne(id: number) {
-    return this.planetRepository.findOneBy({ id });
+    const planet = this.planetRepository
+    .createQueryBuilder('planet')
+    .where('planet.id=:id', { id })
+    .leftJoinAndSelect('planet.population', 'characters')
+    .loadRelationCountAndMap('planet.population', 'planet.population')
+    .getOne()
+
+    return planet
   }
 
   update(id: number, updatePlanetDto: UpdatePlanetDto) {
-    return this.planetRepository.update(id, updatePlanetDto)
+    const planet = this.planetRepository.create(updatePlanetDto)
+    return this.planetRepository.update(id, planet)
   }
 
   remove(id: number) {

@@ -11,7 +11,7 @@ export class CharactersService {
   constructor(
     @InjectRepository(Character)
     private readonly characterRepository: Repository<Character>
-  ) { }
+  ){}
 
   async create(createCharacterDto: CreateCharacterDto) {
     // creatre makes dto validations to entity

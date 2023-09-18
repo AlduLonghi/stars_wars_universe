@@ -1,4 +1,4 @@
-import { Planet } from "src/planets/entities/planet.entity";
+import { Planet } from '../../planets/entities/planet.entity';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity()
@@ -15,8 +15,9 @@ export class Character {
     @Column()
     sensitivity_to_the_force:string
 
-    @ManyToOne(() => Planet, (planet) => planet.population)
+    @ManyToOne(() => Planet, (planet) => planet.population, {
+        eager: true,
+    })
     @JoinColumn()
-
     current_location?: Planet;
 }
