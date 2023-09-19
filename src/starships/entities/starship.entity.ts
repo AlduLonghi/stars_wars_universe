@@ -21,7 +21,9 @@ export class Starship {
   @Column()
   current_location: string;
 
-  @OneToMany(() => Character, (character) => character.starship)
+  @OneToMany(() => Character, (character) => character.starship, {
+    eager: true,
+  })
   passengers: Character[];
 
   @ManyToMany(() => Starship, (starship) => starship.enemies)

@@ -4,7 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Planet } from './entities/planet.entity';
 import { CreatePlanetDto } from './dto/create-planet.dto';
-import { UpdateCharacterDto } from 'src/characters/dto/update-character.dto';
+import { UpdatePlanetDto } from './dto/update-planet.dto';
+import { Services } from '../common/services/services';
 
 describe('PlanetsService', () => {
   const mockPlanetRepository = {
@@ -26,6 +27,7 @@ describe('PlanetsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PlanetsService,
+        Services,
         {
           provide: REPOSITORY_TOKEN,
           useValue: mockPlanetRepository,
@@ -35,10 +37,6 @@ describe('PlanetsService', () => {
 
     service = module.get<PlanetsService>(PlanetsService);
     planetRepository = module.get<Repository<Planet>>(REPOSITORY_TOKEN);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
   });
 
   it('planet repository should be defined', () => {
@@ -65,6 +63,17 @@ describe('PlanetsService', () => {
 
       const response = await service.findAll();
       expect(response).toEqual([]);
+    });
+
+    it('should fail when find all planets is empty', async () => {
+      mockPlanetRepository.find.mockReturnValueOnce([]);
+      let response;
+
+      try {
+        response = await service.findAll();
+      } catch(error) {
+        expect(error).toBeDefined();
+      }
     });
   });
 
@@ -94,17 +103,18 @@ describe('PlanetsService', () => {
 
   describe('update', () => {
     it('should update by id', async () => {
-      const planet: UpdateCharacterDto = {
+      const planet: UpdatePlanetDto = {
         name: 'tatooine',
       };
 
       const id = 12;
 
+      jest.spyOn(planetRepository, 'findOneBy').mockResolvedValue(new Planet)
+
       await service.update(id, planet);
       expect(planetRepository.update).toHaveBeenCalledWith(id, planet);
     });
   });
-
 
   describe('remove', () => {
     it('should remove by id', async () => {

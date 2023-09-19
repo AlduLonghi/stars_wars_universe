@@ -20,6 +20,16 @@ export class CharactersController {
     return this.charactersService.create(createCharacterDto);
   }
 
+  @Post(':id/board/:starshipId')
+  boardToStarship(@Param('id') id: number, @Param('starshipId') starshipId: number) {
+    return this.charactersService.boardToStarship(id, starshipId);
+  }
+
+  @Post(':id/disembark/:starshipId')
+  disembarkFromStarship(@Param('id') id: number, @Param('starshipId') starshipId: number) {
+    return this.charactersService.disembarkFromStarship(id, starshipId);
+  }
+
   @Get()
   findAll() {
     return this.charactersService.findAll();

@@ -3,15 +3,13 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  ValidationArguments,
 } from 'class-validator';
+import { Coordinates } from '../coordinates/coordinates';
 
 @ValidatorConstraint({ async: true })
-export class IsValidCoordinates implements ValidatorConstraintInterface {
+export class IsValidCoordinates extends Coordinates implements ValidatorConstraintInterface {
   validate(value: any) {
-    const coordinatePattern =
-      /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
-    return coordinatePattern.test(value);
+    return this.coordinatePattern.test(value);
   }
 
   defaultMessage(): string {

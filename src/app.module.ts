@@ -10,6 +10,7 @@ import { StarshipsModule } from './starships/starships.module';
   imports: [
     CharactersModule,
     PlanetsModule,
+    StarshipsModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -20,7 +21,6 @@ import { StarshipsModule } from './starships/starships.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    StarshipsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

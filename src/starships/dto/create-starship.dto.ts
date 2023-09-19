@@ -1,5 +1,5 @@
 import { Starship } from '../entities/starship.entity';
-import { IsString, Length, IsInt } from 'class-validator';
+import { IsString, Length, IsInt, IsOptional } from 'class-validator';
 import { IsValidCoordinatesFormat } from 'src/common/decorators/coordinates.decorator';
 
 export class CreateStarshipDto {
@@ -13,8 +13,9 @@ export class CreateStarshipDto {
   @IsValidCoordinatesFormat()
   current_location: string;
 
+  @IsOptional()
   @IsInt({
     each: true,
   })
-  enemies: Starship[];
+  enemies?: Starship[];
 }

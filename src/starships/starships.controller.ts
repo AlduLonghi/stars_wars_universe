@@ -20,6 +20,14 @@ export class StarshipsController {
     return this.starshipsService.create(createStarshipDto);
   }
 
+  @Get(':id/calculate-distance/:planetId')
+  relocateCharacter(
+    @Param('id') id: number,
+    @Param('planetId') planetId: number,
+  ) {
+    return this.starshipsService.calculateDistance(id, planetId);
+  }
+
   @Get()
   findAll() {
     return this.starshipsService.findAll();
@@ -36,6 +44,11 @@ export class StarshipsController {
     @Body() updateStarshipDto: UpdateStarshipDto,
   ) {
     return this.starshipsService.update(+id, updateStarshipDto);
+  }
+
+  @Patch(':id/travel-to/:planetId')
+  travelTo(@Param('id') id: number, @Param('planetId') planetId: number) {
+    return this.starshipsService.travelTo(id, planetId);
   }
 
   @Delete(':id')

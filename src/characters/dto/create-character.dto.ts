@@ -1,5 +1,5 @@
 import { IsString, Length, IsIn, IsOptional, IsInt } from 'class-validator';
-import { Planet } from 'src/planets/entities/planet.entity';
+import { Planet } from '../../planets/entities/planet.entity';
 
 const sensitivity = ['low', 'medium', 'high'];
 

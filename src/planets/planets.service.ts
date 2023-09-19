@@ -1,44 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { Planet } from './entities/planet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Services } from 'src/common/services/services';
+
 
 @Injectable()
 export class PlanetsService {
   constructor(
     @InjectRepository(Planet)
     private readonly planetRepository: Repository<Planet>,
+
+    @Inject(Services)
+    private readonly services: Services, 
   ) {}
 
-  create(createPlanetDto: CreatePlanetDto) {
+  async create(createPlanetDto: CreatePlanetDto) {
     const planet = this.planetRepository.create(createPlanetDto);
-    return this.planetRepository.save(planet);
+    return await this.planetRepository.save(planet);
   }
 
-  findAll() {
-    return this.planetRepository.find();
+  async findAll() {
+    const list = await this.planetRepository.find()
+    this.services.validateEntity(list, 'Planet');
+
+    return list;
   }
 
-  findOne(id: number) {
-    const planet = this.planetRepository
+  async findOne(id: number) {
+    const planet = await this.planetRepository
       .createQueryBuilder('planet')
       .where('planet.id=:id', { id })
       .leftJoinAndSelect('planet.population', 'characters')
       .loadRelationCountAndMap('planet.population', 'planet.population')
       .getOne();
+    
+    this.services.validateEntity(planet, 'Planet', id)
 
     return planet;
   }
 
-  update(id: number, updatePlanetDto: UpdatePlanetDto) {
-    // const planet = this.planetRepository.create(updatePlanetDto);
-    return this.planetRepository.update(id, updatePlanetDto);
+  async update(id: number, updatePlanetDto: UpdatePlanetDto) {
+    const planet = await this.planetRepository.findOneBy({ id })
+    this.services.validateEntity(planet, 'Planet');
+
+    await this.planetRepository.update(id, updatePlanetDto);
+    return this.services.message(`Planet ${id} successfully updated`);
   }
 
-  remove(id: number) {
-    this.planetRepository.findOneBy({ id });
-    return this.planetRepository.delete({ id });
+  async remove(id: number) {
+    const planet = await this.planetRepository.findOneBy({ id })
+    this.services.validateEntity(planet, 'Planet', id);
+
+    await this.planetRepository.delete({ id });
+    return this.services.message(`Planet ${id} successfully deleted`);
   }
 }
