@@ -22,7 +22,6 @@ describe('CharactersService', () => {
   let service: CharactersService;
   let characterRepository: Repository<Character>;
   let planetRepository: Repository<Planet>;
-  let starshipRepository: Repository<Starship>;
 
   const REPOSITORY_TOKEN = getRepositoryToken(Character);
   const PLANET_REPOSITORY_TOKEN = getRepositoryToken(Planet);
@@ -51,16 +50,13 @@ describe('CharactersService', () => {
     service = module.get<CharactersService>(CharactersService);
     characterRepository = module.get<Repository<Character>>(REPOSITORY_TOKEN);
     planetRepository = module.get<Repository<Planet>>(PLANET_REPOSITORY_TOKEN);
-    starshipRepository = module.get<Repository<Starship>>(
-      STARSHIP_REPOSITORY_TOKEN,
-    );
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create Character', () => {
+  describe('create', () => {
     it('should create a new Character', async () => {
       const character: CreateCharacterDto = {
         name: 'Yoda',
@@ -74,7 +70,7 @@ describe('CharactersService', () => {
     });
   });
 
-  describe('find all characters', () => {
+  describe('findAll', () => {
     it('should find all characters', async () => {
       const character: Character = {
         id: 12,
@@ -93,17 +89,16 @@ describe('CharactersService', () => {
 
     it('should fail when find all characters is empty', async () => {
       mockRepository.find.mockReturnValueOnce([]);
-      let response;
 
       try {
-        response = await service.findAll();
+        await service.findAll();
       } catch (error) {
         expect(error).toBeDefined();
       }
     });
   });
 
-  describe('find one', () => {
+  describe('findOne', () => {
     it('should find one character by id', async () => {
       const character: Character = {
         id: 12,
@@ -136,7 +131,7 @@ describe('CharactersService', () => {
     });
   });
 
-  describe('relocate character', () => {
+  describe('relocateCharacter', () => {
     it('should update by id', async () => {
       const character: Character = {
         id: 12,
@@ -167,7 +162,7 @@ describe('CharactersService', () => {
     });
   });
 
-  describe('board character to starship', () => {
+  describe('boardToStarship', () => {
     it('should board character to starship', async () => {
       const id = 12;
       const starshipId = 2;
@@ -177,8 +172,8 @@ describe('CharactersService', () => {
     });
   });
 
-  describe('disembark character to starship', () => {
-    it('should board character to starship', async () => {
+  describe('disembarkFromStarship', () => {
+    it('should disembark character to starship', async () => {
       const id = 12;
       const starshipId = 2;
 

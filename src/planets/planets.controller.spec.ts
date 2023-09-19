@@ -54,7 +54,7 @@ describe('CharactersController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create controller', () => {
+  describe('create', () => {
     it('should create planet', async () => {
       const planet: CreatePlanetDto = {
         name: 'name',
@@ -63,12 +63,12 @@ describe('CharactersController', () => {
         terrain: 'hill',
       };
 
-      const response = await controller.create(planet);
+      await controller.create(planet);
       expect(service.create).toHaveBeenCalled();
     });
   });
 
-  describe('find one', () => {
+  describe('findOne', () => {
     it('find one planet', async () => {
       const id = 12;
 
@@ -79,7 +79,7 @@ describe('CharactersController', () => {
     });
   });
 
-  describe('find all', () => {
+  describe('findAll', () => {
     it('find all planets', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([planet]);
 
@@ -89,7 +89,7 @@ describe('CharactersController', () => {
   });
 
   describe('update', () => {
-    it('update character by id', async () => {
+    it('update planet by id', async () => {
       const id = 12;
       const planetDto: UpdatePlanetDto = {
         name: 'new planet name',
@@ -106,7 +106,7 @@ describe('CharactersController', () => {
     });
   });
 
-  describe('remove planet', () => {
+  describe('remove', () => {
     it('remove planet by id', async () => {
       const id = 12;
 

@@ -5,6 +5,7 @@ import { StarshipsController } from './starships.controller';
 import { StarshipsService } from './starships.service';
 import { Starship } from './entities/starship.entity';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
+import { GetEnemiesDto } from './dto/get-enemies.dto';
 
 describe('CharactersController', () => {
   const mockService = {
@@ -16,6 +17,7 @@ describe('CharactersController', () => {
     calculateDistance: jest.fn(),
     travelTo: jest.fn(),
     setEnemy: jest.fn(),
+    getEnemiesWithinRange: jest.fn(),
   };
 
   let controller: StarshipsController;
@@ -62,7 +64,7 @@ describe('CharactersController', () => {
         current_location: '',
       };
 
-      const response = await controller.create(starship);
+      await controller.create(starship);
       expect(service.create).toHaveBeenCalled();
     });
   });
@@ -163,6 +165,18 @@ describe('CharactersController', () => {
       expect(response).toStrictEqual({
         message: 'starship 12 succesfully removed',
       });
+    });
+  });
+
+  describe('getEnemiesWithinRange', () => {
+    it('get enemies within range', async () => {
+      const id = 12;
+      const dto: GetEnemiesDto = {
+        range: 900,
+      };
+
+      await controller.getEnemiesWithinRange(id, dto);
+      expect(service.getEnemiesWithinRange).toHaveBeenCalled();
     });
   });
 });

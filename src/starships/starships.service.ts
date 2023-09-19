@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { Starship } from './entities/starship.entity';
 import { Planet } from '../planets/entities/planet.entity';
 import { Coordinates } from '../common/coordinates/coordinates';
 import { Services } from '../common/services/services';
+import { GetEnemiesDto } from './dto/get-enemies.dto';
 
 @Injectable()
 export class StarshipsService {
@@ -123,6 +124,34 @@ export class StarshipsService {
     return this.services.message(
       `Starship ${enemyId} successfully added as enemy of starship ${id}`,
     );
+  }
+
+  async getEnemiesWithinRange(id: number, getEnemiesDto: GetEnemiesDto) {
+    const starship = await this.starshipRepository.findOneBy({ id });
+    this.services.validateEntity(starship, 'Starship', id);
+
+    const { latitude, longitude } = this.coordinates.toLatitudeAndLongitude(
+      starship.current_location,
+    );
+
+    const enemiesList = await this.starshipRepository
+      .createQueryBuilder('starship')
+      .innerJoinAndSelect('starship.enemies', 'enemy')
+      .addSelect(
+        `10000 * ACOS(
+        COS(RADIANS(${latitude})) * COS(RADIANS(SUBSTRING_INDEX(starship.current_location, ',', 1))) *
+        COS(RADIANS(${longitude} - SUBSTRING_INDEX(starship.current_location, ',', -1))) +
+        SIN(RADIANS(${latitude})) * SIN(RADIANS(SUBSTRING_INDEX(starship.current_location, ',', 1)))
+      )`,
+        'distance',
+      )
+      .where('starship.id != :id', { id })
+      .having('distance <= :range', { range: getEnemiesDto.range })
+      .getMany();
+
+    this.services.validateEntity(enemiesList, 'Enemies');
+
+    return enemiesList;
   }
 
   async remove(id: number) {

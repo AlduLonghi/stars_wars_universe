@@ -6,6 +6,7 @@ import { Planet } from './entities/planet.entity';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { Services } from '../common/services/services';
+import { Coordinates } from '../common/coordinates/coordinates';
 
 describe('PlanetsService', () => {
   const mockPlanetRepository = {
@@ -29,6 +30,7 @@ describe('PlanetsService', () => {
       providers: [
         PlanetsService,
         Services,
+        Coordinates,
         {
           provide: REPOSITORY_TOKEN,
           useValue: mockPlanetRepository,
@@ -39,6 +41,15 @@ describe('PlanetsService', () => {
     service = module.get<PlanetsService>(PlanetsService);
     planetRepository = module.get<Repository<Planet>>(REPOSITORY_TOKEN);
   });
+
+  const planet: Planet = {
+    id: 12,
+    name: 'tatooine',
+    climate: 'dry',
+    terrain: 'hill',
+    coordinates: '1234,2345',
+    population: [],
+  };
 
   it('planet repository should be defined', () => {
     expect(planetRepository).toBeDefined();
@@ -63,19 +74,18 @@ describe('PlanetsService', () => {
       mockPlanetRepository.createQueryBuilder.mockReturnValueOnce({
         leftJoinAndSelect: jest.fn().mockReturnThis(),
         loadRelationCountAndMap: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValueOnce([]),
+        getMany: jest.fn().mockResolvedValueOnce([planet]),
       });
 
       const response = await service.findAll();
-      expect(response).toEqual([]);
+      expect(response).toEqual([planet]);
     });
 
     it('should fail when find all planets is empty', async () => {
       mockPlanetRepository.find.mockReturnValueOnce([]);
-      let response;
 
       try {
-        response = await service.findAll();
+        await service.findAll();
       } catch (error) {
         expect(error).toBeDefined();
       }
@@ -84,14 +94,6 @@ describe('PlanetsService', () => {
 
   describe('find one', () => {
     it('should find one by id', async () => {
-      const planet: Planet = {
-        id: 12,
-        name: 'tatooine',
-        climate: 'dry',
-        terrain: 'hill',
-        coordinates: '1234,2345',
-        population: [],
-      };
       const id = 12;
 
       mockPlanetRepository.createQueryBuilder.mockReturnValueOnce({

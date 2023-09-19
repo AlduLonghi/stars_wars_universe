@@ -10,6 +10,7 @@ import {
 import { StarshipsService } from './starships.service';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
+import { GetEnemiesDto } from './dto/get-enemies.dto';
 
 @Controller('starships')
 export class StarshipsController {
@@ -26,6 +27,14 @@ export class StarshipsController {
     @Param('planetId') planetId: number,
   ) {
     return this.starshipsService.calculateDistance(id, planetId);
+  }
+
+  @Get(':id/enemies-within-range')
+  getEnemiesWithinRange(
+    @Param('id') id: number,
+    @Body() getEnemiesDto: GetEnemiesDto,
+  ) {
+    return this.starshipsService.getEnemiesWithinRange(id, getEnemiesDto);
   }
 
   @Get()

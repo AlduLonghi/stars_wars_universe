@@ -10,7 +10,7 @@ export class Services {
       throw new NotFoundException(`${entityName} with ID ${id} not found`);
     }
 
-    if (entity.Length === 0) {
+    if (entity.length === 0) {
       throw new NotFoundException(`${entityName} entities not found`);
     }
   }

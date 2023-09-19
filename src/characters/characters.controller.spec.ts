@@ -43,7 +43,7 @@ describe('CharactersController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create controller', () => {
+  describe('create', () => {
     it('should create character', async () => {
       const character: CreateCharacterDto = {
         name: 'name',
@@ -51,7 +51,7 @@ describe('CharactersController', () => {
         sensitivity_to_the_force: 'high',
       };
 
-      const response = await controller.create(character);
+      await controller.create(character);
       expect(service.create).toHaveBeenCalled();
     });
   });
@@ -88,7 +88,7 @@ describe('CharactersController', () => {
     });
   });
 
-  describe('find one', () => {
+  describe('findOne controller', () => {
     it('find one character', async () => {
       const id = 12;
 
@@ -108,7 +108,7 @@ describe('CharactersController', () => {
     });
   });
 
-  describe('find all', () => {
+  describe('findAll controller', () => {
     it('find all characters', async () => {
       const character: Character = {
         id: 12,
@@ -144,7 +144,7 @@ describe('CharactersController', () => {
     });
   });
 
-  describe('relocateCharacter', () => {
+  describe('relocateCharacter controller', () => {
     it('relocate character by id', async () => {
       const id = 12;
       const planetId = 1;
@@ -160,7 +160,7 @@ describe('CharactersController', () => {
     });
   });
 
-  describe('remove character', () => {
+  describe('remove character controller', () => {
     it('remove character by id', async () => {
       const id = 12;
 

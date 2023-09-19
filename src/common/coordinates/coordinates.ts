@@ -1,17 +1,19 @@
+/* eslint-disable prefer-const */
 export class Coordinates {
   public coordinatePattern =
     /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
 
-  private toLongitudAndLatitud(distance1: string, distance2: string) {
-    const [latitude1, longitude1] = distance1.split(',').map(parseFloat);
-    const [latitude2, longitude2] = distance2.split(',').map(parseFloat);
-
-    return { latitude1, longitude1, latitude2, longitude2 };
+  toLatitudeAndLongitude(distance: string) {
+    const [latitude, longitude] = distance.split(',').map(parseFloat);
+    return { latitude, longitude };
   }
 
   calculateGalacticDistance(distance1: string, distance2: string): number {
-    let { latitude1, longitude1, latitude2, longitude2 } =
-      this.toLongitudAndLatitud(distance1, distance2);
+    let { latitude: latitude1, longitude: longitude1 } =
+      this.toLatitudeAndLongitude(distance1);
+
+    let { latitude: latitude2, longitude: longitude2 } =
+      this.toLatitudeAndLongitude(distance2);
 
     const earthRadiusKm = 10000; // Imaginary radius of a galactic system in kilometers
     const dLat = this.degreesToRadians(latitude2 - latitude1);

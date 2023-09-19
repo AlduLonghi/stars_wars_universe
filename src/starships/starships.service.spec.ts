@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StarshipsService } from './starships.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Character } from '../characters/entities/character.entity';
 import { Planet } from '../planets/entities/planet.entity';
 import { Starship } from './entities/starship.entity';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { Services } from '../common/services/services';
 import { Coordinates } from '../common/coordinates/coordinates';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
+import { GetEnemiesDto } from './dto/get-enemies.dto';
 
 describe('StarshipsService', () => {
   const mockRepository = {
@@ -25,10 +25,8 @@ describe('StarshipsService', () => {
   let service: StarshipsService;
   let starshipsRepository: Repository<Starship>;
   let planetRepository: Repository<Planet>;
-  let characterRepository: Repository<Character>;
 
   const REPOSITORY_TOKEN = getRepositoryToken(Starship);
-  const CHARACTERS_REPOSITORY_TOKEN = getRepositoryToken(Character);
   const PLANETS_REPOSITORY_TOKEN = getRepositoryToken(Planet);
 
   beforeEach(async () => {
@@ -42,10 +40,6 @@ describe('StarshipsService', () => {
           useValue: mockRepository,
         },
         {
-          provide: CHARACTERS_REPOSITORY_TOKEN,
-          useValue: mockRepository,
-        },
-        {
           provide: PLANETS_REPOSITORY_TOKEN,
           useValue: mockRepository,
         },
@@ -54,9 +48,6 @@ describe('StarshipsService', () => {
 
     service = module.get<StarshipsService>(StarshipsService);
     starshipsRepository = module.get<Repository<Starship>>(REPOSITORY_TOKEN);
-    characterRepository = module.get<Repository<Character>>(
-      CHARACTERS_REPOSITORY_TOKEN,
-    );
     planetRepository = module.get<Repository<Planet>>(PLANETS_REPOSITORY_TOKEN);
   });
 
@@ -77,7 +68,7 @@ describe('StarshipsService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create starship', () => {
+  describe('create', () => {
     it('should create a new planet', async () => {
       const starship: CreateStarshipDto = {
         name: 'excecutor',
@@ -90,16 +81,16 @@ describe('StarshipsService', () => {
     });
   });
 
-  describe('find all starships', () => {
-    it('should find all planets', async () => {
-      jest.spyOn(mockRepository, 'find').mockResolvedValueOnce([]);
+  describe('findAll', () => {
+    it('should find all starships', async () => {
+      jest.spyOn(mockRepository, 'find').mockResolvedValueOnce([starship]);
 
       const response = await service.findAll();
-      expect(response).toEqual([]);
+      expect(response).toEqual([starship]);
     });
   });
 
-  describe('find one', () => {
+  describe('findOne', () => {
     it('should find one starship by id', async () => {
       const id = 12;
 
@@ -137,15 +128,37 @@ describe('StarshipsService', () => {
     });
   });
 
-  describe('set enemy', () => {
+  describe('setEnemy', () => {
     it('should set enemy', async () => {
       const id = 12;
       const enemyId = 1;
 
       jest.spyOn(starshipsRepository, 'findOne').mockResolvedValue(starship);
 
-      const result = await service.setEnemy(id, enemyId);
+      await service.setEnemy(id, enemyId);
       expect(starshipsRepository.save).toHaveBeenCalled();
+    });
+  });
+
+  describe('getEnemiesWithinRange', () => {
+    it('get enemies within range', async () => {
+      const id = 12;
+      mockRepository.createQueryBuilder.mockReturnValueOnce({
+        innerJoinAndSelect: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        having: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValueOnce([starship]),
+      });
+
+      const dto: GetEnemiesDto = {
+        range: 900,
+      };
+
+      jest.spyOn(starshipsRepository, 'findOne').mockResolvedValue(starship);
+
+      await service.getEnemiesWithinRange(id, dto);
+      expect(starshipsRepository.createQueryBuilder).toHaveBeenCalled();
     });
   });
 });
