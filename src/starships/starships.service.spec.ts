@@ -19,11 +19,13 @@ describe('StarshipsService', () => {
     update: jest.fn(),
     findOneBy: jest.fn(),
     createQueryBuilder: jest.fn(),
+    setEnemy: jest.fn(),
+    findOne: jest.fn(),
   };
   let service: StarshipsService;
-  let starshipsRepository: Repository<Starship>
+  let starshipsRepository: Repository<Starship>;
   let planetRepository: Repository<Planet>;
-  let characterRepository: Repository<Character>
+  let characterRepository: Repository<Character>;
 
   const REPOSITORY_TOKEN = getRepositoryToken(Starship);
   const CHARACTERS_REPOSITORY_TOKEN = getRepositoryToken(Character);
@@ -52,9 +54,24 @@ describe('StarshipsService', () => {
 
     service = module.get<StarshipsService>(StarshipsService);
     starshipsRepository = module.get<Repository<Starship>>(REPOSITORY_TOKEN);
-    characterRepository = module.get<Repository<Character>>(CHARACTERS_REPOSITORY_TOKEN);
+    characterRepository = module.get<Repository<Character>>(
+      CHARACTERS_REPOSITORY_TOKEN,
+    );
     planetRepository = module.get<Repository<Planet>>(PLANETS_REPOSITORY_TOKEN);
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const starship: Starship = {
+    id: 12,
+    name: 'Yoda',
+    cargo_capacity: 100,
+    passengers: [],
+    enemies: [],
+    current_location: '',
+  };
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -65,7 +82,7 @@ describe('StarshipsService', () => {
       const starship: CreateStarshipDto = {
         name: 'excecutor',
         cargo_capacity: 10,
-        current_location: '88.898765, 32.123212'
+        current_location: '88.898765, 32.123212',
       };
 
       await service.create(starship);
@@ -84,34 +101,28 @@ describe('StarshipsService', () => {
 
   describe('find one', () => {
     it('should find one starship by id', async () => {
-        const starship: Starship = {
-            id: 12,
-            name: 'Yoda',
-           cargo_capacity: 100,
-           passengers: [],
-           enemies: [],
-           current_location: '',
-        };
       const id = 12;
 
-      jest.spyOn(starshipsRepository, 'findOneBy').mockResolvedValue(starship)
+      jest.spyOn(starshipsRepository, 'findOne').mockResolvedValue(starship);
 
       const response = await service.findOne(id);
-      expect(response).toEqual(starship)
-      expect(starshipsRepository.findOneBy).toHaveBeenCalled();
+      expect(response).toEqual(starship);
+      expect(starshipsRepository.findOne).toHaveBeenCalled();
     });
   });
 
   describe('update', () => {
     it('should update by id', async () => {
-      const starship: UpdateStarshipDto = {
+      const starshipDto: UpdateStarshipDto = {
         name: 'tatooine',
       };
 
       const id = 12;
 
-      await service.update(id, starship);
-      expect(starshipsRepository.update).toHaveBeenCalledWith(id, starship);
+      jest.spyOn(starshipsRepository, 'findOneBy').mockResolvedValue(starship);
+
+      await service.update(id, starshipDto);
+      expect(starshipsRepository.update).toHaveBeenCalledWith(id, starshipDto);
     });
   });
 
@@ -119,10 +130,22 @@ describe('StarshipsService', () => {
     it('should remove by id', async () => {
       const id = 12;
 
+      jest.spyOn(starshipsRepository, 'findOneBy').mockResolvedValue(starship);
+
       await service.remove(id);
       expect(starshipsRepository.delete).toHaveBeenCalled();
     });
   });
 
+  describe('set enemy', () => {
+    it('should set enemy', async () => {
+      const id = 12;
+      const enemyId = 1;
 
+      jest.spyOn(starshipsRepository, 'findOne').mockResolvedValue(starship);
+
+      const result = await service.setEnemy(id, enemyId);
+      expect(starshipsRepository.save).toHaveBeenCalled();
+    });
+  });
 });

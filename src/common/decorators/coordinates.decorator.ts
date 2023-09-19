@@ -7,7 +7,10 @@ import {
 import { Coordinates } from '../coordinates/coordinates';
 
 @ValidatorConstraint({ async: true })
-export class IsValidCoordinates extends Coordinates implements ValidatorConstraintInterface {
+export class IsValidCoordinates
+  extends Coordinates
+  implements ValidatorConstraintInterface
+{
   validate(value: any) {
     return this.coordinatePattern.test(value);
   }

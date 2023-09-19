@@ -4,7 +4,6 @@ import { CharactersService } from './characters.service';
 import { CharactersController } from './characters.controller';
 import { Character } from './entities/character.entity';
 import { Planet } from 'src/planets/entities/planet.entity';
-import { Coordinates } from 'src/common/coordinates/coordinates';
 import { Services } from 'src/common/services/services';
 import { Starship } from 'src/starships/entities/starship.entity';
 
@@ -13,7 +12,7 @@ import { Starship } from 'src/starships/entities/starship.entity';
     TypeOrmModule.forFeature([Character]),
     TypeOrmModule.forFeature([Planet]),
     TypeOrmModule.forFeature([Starship]),
-    Services
+    Services,
   ],
   controllers: [CharactersController],
   providers: [CharactersService, Services],

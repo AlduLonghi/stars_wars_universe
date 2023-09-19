@@ -21,7 +21,7 @@ export class StarshipsController {
   }
 
   @Get(':id/calculate-distance/:planetId')
-  relocateCharacter(
+  calculateDistance(
     @Param('id') id: number,
     @Param('planetId') planetId: number,
   ) {
@@ -34,25 +34,30 @@ export class StarshipsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.starshipsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.starshipsService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateStarshipDto: UpdateStarshipDto,
   ) {
-    return this.starshipsService.update(+id, updateStarshipDto);
+    return this.starshipsService.update(id, updateStarshipDto);
   }
 
-  @Patch(':id/travel-to/:planetId')
+  @Post(':id/travel-to/:planetId')
   travelTo(@Param('id') id: number, @Param('planetId') planetId: number) {
     return this.starshipsService.travelTo(id, planetId);
   }
 
+  @Post(':id/set-enemy/:enemyId')
+  setEnemy(@Param('id') id: number, @Param('enemyId') enemyId: number) {
+    return this.starshipsService.setEnemy(id, enemyId);
+  }
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.starshipsService.remove(+id);
   }
 }

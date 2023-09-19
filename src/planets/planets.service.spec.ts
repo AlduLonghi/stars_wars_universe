@@ -16,6 +16,7 @@ describe('PlanetsService', () => {
     update: jest.fn(),
     findOneBy: jest.fn(),
     createQueryBuilder: jest.fn(),
+    getMany: jest.fn(),
   };
 
   let service: PlanetsService;
@@ -59,7 +60,11 @@ describe('PlanetsService', () => {
 
   describe('find all planets', () => {
     it('should find all planets', async () => {
-      mockPlanetRepository.find.mockReturnValueOnce([]);
+      mockPlanetRepository.createQueryBuilder.mockReturnValueOnce({
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        loadRelationCountAndMap: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValueOnce([]),
+      });
 
       const response = await service.findAll();
       expect(response).toEqual([]);
@@ -71,7 +76,7 @@ describe('PlanetsService', () => {
 
       try {
         response = await service.findAll();
-      } catch(error) {
+      } catch (error) {
         expect(error).toBeDefined();
       }
     });
@@ -109,7 +114,7 @@ describe('PlanetsService', () => {
 
       const id = 12;
 
-      jest.spyOn(planetRepository, 'findOneBy').mockResolvedValue(new Planet)
+      jest.spyOn(planetRepository, 'findOneBy').mockResolvedValue(new Planet());
 
       await service.update(id, planet);
       expect(planetRepository.update).toHaveBeenCalledWith(id, planet);

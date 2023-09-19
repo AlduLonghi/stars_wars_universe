@@ -1,14 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CharactersController } from './characters.controller';
 import { CharactersService } from './characters.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Character } from './entities/character.entity';
 import { Planet } from '../planets/entities/planet.entity';
 import { Starship } from '../starships/entities/starship.entity';
 import { Services } from '../common/services/services';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
-
 
 describe('CharactersController', () => {
   const mockService = {
@@ -19,8 +17,8 @@ describe('CharactersController', () => {
     findAll: jest.fn(),
     update: jest.fn(),
     relocateCharacter: jest.fn(),
-    remove: jest.fn()
-  }
+    remove: jest.fn(),
+  };
 
   let controller: CharactersController;
   let service: CharactersService;
@@ -31,10 +29,10 @@ describe('CharactersController', () => {
       providers: [
         Services,
         {
-            provide: CharactersService,
-            useValue: mockService
+          provide: CharactersService,
+          useValue: mockService,
         },
-    ],
+      ],
     }).compile();
 
     controller = module.get<CharactersController>(CharactersController);
@@ -47,76 +45,84 @@ describe('CharactersController', () => {
 
   describe('create controller', () => {
     it('should create character', async () => {
-        const character: CreateCharacterDto = {
-            name: 'name',
-            species: 'mandalorian',
-            sensitivity_to_the_force: 'high'
-        };
-        
-       const response = await controller.create(character);
-        expect(service.create).toHaveBeenCalled();
+      const character: CreateCharacterDto = {
+        name: 'name',
+        species: 'mandalorian',
+        sensitivity_to_the_force: 'high',
+      };
+
+      const response = await controller.create(character);
+      expect(service.create).toHaveBeenCalled();
     });
   });
 
   describe('boardToStarship controller', () => {
     it('should board character', async () => {
-       const id = 12;
-       const starshipId = 13;
+      const id = 12;
+      const starshipId = 13;
 
-       jest.spyOn(service, 'boardToStarship').mockResolvedValueOnce({ message: 'Character 12 succesfully embarked on starship 13' })
-        
-       const response = await controller.boardToStarship(id, starshipId);
-        expect(response).toStrictEqual({ message: 'Character 12 succesfully embarked on starship 13' });
+      jest.spyOn(service, 'boardToStarship').mockResolvedValueOnce({
+        message: 'Character 12 succesfully embarked on starship 13',
+      });
+
+      const response = await controller.boardToStarship(id, starshipId);
+      expect(response).toStrictEqual({
+        message: 'Character 12 succesfully embarked on starship 13',
+      });
     });
   });
 
   describe('disembarFromStarship controller', () => {
     it('should disembark character', async () => {
-       const id = 12;
-       const starshipId = 13;
+      const id = 12;
+      const starshipId = 13;
 
-       jest.spyOn(service, 'disembarkFromStarship').mockResolvedValueOnce({ message: 'Character 12 succesfully disembarked from starship 13' })
-        
-       const response = await controller.disembarkFromStarship(id, starshipId);
-        expect(response).toStrictEqual({ message: 'Character 12 succesfully disembarked from starship 13' });
+      jest.spyOn(service, 'disembarkFromStarship').mockResolvedValueOnce({
+        message: 'Character 12 succesfully disembarked from starship 13',
+      });
+
+      const response = await controller.disembarkFromStarship(id, starshipId);
+      expect(response).toStrictEqual({
+        message: 'Character 12 succesfully disembarked from starship 13',
+      });
     });
   });
 
   describe('find one', () => {
     it('find one character', async () => {
-       const id = 12;
+      const id = 12;
 
-       const character: Character = {
+      const character: Character = {
         id: 12,
         name: 'name',
         species: 'mandalorian',
         sensitivity_to_the_force: 'high',
-        current_location: new Planet,
-        starship: new Starship,
-    };
+        current_location: new Planet(),
+        starship: new Starship(),
+      };
 
-       jest.spyOn(service, 'findOne').mockResolvedValue(character)
-        
-       const response = await controller.findOne(id);
-        expect(response).toStrictEqual(character);
+      jest.spyOn(service, 'findOne').mockResolvedValue(character);
+
+      const response = await controller.findOne(id);
+      expect(response).toStrictEqual(character);
     });
   });
 
   describe('find all', () => {
     it('find all characters', async () => {
-       const character: Character = {
+      const character: Character = {
         id: 12,
         name: 'name',
         species: 'mandalorian',
         sensitivity_to_the_force: 'high',
-        current_location: new Planet,
-        starship: new Starship,
-    };
+        current_location: new Planet(),
+        starship: new Starship(),
+      };
 
-       jest.spyOn(service, 'findAll').mockResolvedValue([character])
-        
-       const response = await controller.findAll();
-        expect(response).toStrictEqual([character]);
+      jest.spyOn(service, 'findAll').mockResolvedValue([character]);
+
+      const response = await controller.findAll();
+      expect(response).toStrictEqual([character]);
     });
   });
 
@@ -127,10 +133,14 @@ describe('CharactersController', () => {
         species: 'mandalorian',
       };
 
-       jest.spyOn(service, 'update').mockResolvedValue({ message: 'Character 12 succesfully updated'})
-        
-       const response = await controller.update(id, character);
-        expect(response).toStrictEqual({ message: 'Character 12 succesfully updated'});
+      jest
+        .spyOn(service, 'update')
+        .mockResolvedValue({ message: 'Character 12 succesfully updated' });
+
+      const response = await controller.update(id, character);
+      expect(response).toStrictEqual({
+        message: 'Character 12 succesfully updated',
+      });
     });
   });
 
@@ -139,10 +149,14 @@ describe('CharactersController', () => {
       const id = 12;
       const planetId = 1;
 
-       jest.spyOn(service, 'relocateCharacter').mockResolvedValue({ message: 'Character 12 succesfully relocated'})
-        
-       const response = await controller.relocateCharacter(id, planetId);
-        expect(response).toStrictEqual({ message: 'Character 12 succesfully relocated'});
+      jest
+        .spyOn(service, 'relocateCharacter')
+        .mockResolvedValue({ message: 'Character 12 succesfully relocated' });
+
+      const response = await controller.relocateCharacter(id, planetId);
+      expect(response).toStrictEqual({
+        message: 'Character 12 succesfully relocated',
+      });
     });
   });
 
@@ -150,12 +164,14 @@ describe('CharactersController', () => {
     it('remove character by id', async () => {
       const id = 12;
 
-       jest.spyOn(service, 'remove').mockResolvedValue({ message: 'Character 12 succesfully removed'})
-        
-       const response = await controller.remove(id);
-        expect(response).toStrictEqual({ message: 'Character 12 succesfully removed'});
+      jest
+        .spyOn(service, 'remove')
+        .mockResolvedValue({ message: 'Character 12 succesfully removed' });
+
+      const response = await controller.remove(id);
+      expect(response).toStrictEqual({
+        message: 'Character 12 succesfully removed',
+      });
     });
   });
-
-
 });

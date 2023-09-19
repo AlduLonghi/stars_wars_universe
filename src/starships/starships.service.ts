@@ -21,7 +21,7 @@ export class StarshipsService {
     private readonly coordinates: Coordinates,
 
     @Inject(Services)
-    private readonly services: Services, 
+    private readonly services: Services,
   ) {}
 
   async create(createStarshipDto: CreateStarshipDto) {
@@ -37,7 +37,13 @@ export class StarshipsService {
   }
 
   async findOne(id: number) {
-    const starship = await this.starshipRepository.findOneBy({ id });
+    const starship = await this.starshipRepository.findOne({
+      where: { id: id },
+      relations: {
+        enemies: true,
+        passengers: true,
+      },
+    });
     this.services.validateEntity(starship, 'Starship', id);
 
     return starship;
@@ -56,32 +62,67 @@ export class StarshipsService {
     const starship = await this.starshipRepository.findOneBy({ id });
     this.services.validateEntity(starship, 'Starship', id);
 
-    const planet = await this.planetRepository.findOneBy({ id })
+    const planet = await this.planetRepository.findOneBy({ id });
     this.services.validateEntity(planet, 'Planet', planetId);
 
-    await this.starshipRepository.update(id, { current_location: planet.coordinates});
+    await this.starshipRepository.update(id, {
+      current_location: planet.coordinates,
+    });
 
-    return this.services.message(`Starship ${id} successfully relocated to Planet: ${planetId}`);
+    return this.services.message(
+      `Starship ${id} successfully relocated to Planet: ${planetId}`,
+    );
   }
 
   async calculateDistance(id: number, planetId: number) {
     type distanceResponse = {
-      distance_in_kilometers:string,
-    }
+      distance_in_kilometers: string;
+    };
 
     const starship = await this.starshipRepository.findOneBy({ id });
     this.services.validateEntity(starship, 'Starship', id);
 
-    const planet = await this.planetRepository.findOneBy({ id: planetId })
+    const planet = await this.planetRepository.findOneBy({ id: planetId });
     this.services.validateEntity(planet, 'Planet', planetId);
 
-    const getDistance = this.coordinates.calculateGalacticDistance(starship.current_location, planet.coordinates);
+    const getDistance = this.coordinates.calculateGalacticDistance(
+      starship.current_location,
+      planet.coordinates,
+    );
 
-    let res: distanceResponse = {
+    const res: distanceResponse = {
       distance_in_kilometers: `${getDistance}`,
-    }
-   
+    };
+
     return res;
+  }
+
+  async setEnemy(id: number, enemyId: number) {
+    const starship = await this.starshipRepository.findOne({
+      where: { id: id },
+      relations: {
+        enemies: true,
+      },
+    });
+    this.services.validateEntity(starship, 'Starship', id);
+
+    const enemy = await this.starshipRepository.findOne({
+      where: { id: id },
+      relations: {
+        enemies: true,
+      },
+    });
+    this.services.validateEntity(enemy, 'Enemy', enemyId);
+
+    starship.enemies = [...starship.enemies, enemy];
+    enemy.enemies = [...enemy.enemies, starship];
+
+    await this.starshipRepository.save(starship);
+    await this.starshipRepository.save(enemy);
+
+    return this.services.message(
+      `Starship ${enemyId} successfully added as enemy of starship ${id}`,
+    );
   }
 
   async remove(id: number) {

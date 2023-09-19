@@ -27,16 +27,16 @@ export class PlanetsController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.planetsService.findOne(+id);
+    return this.planetsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updatePlanetDto: UpdatePlanetDto) {
-    return this.planetsService.update(+id, updatePlanetDto);
+    return this.planetsService.update(id, updatePlanetDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: number) {
-    return this.planetsService.remove(+id);
+    return this.planetsService.remove(id);
   }
 }

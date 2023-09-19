@@ -21,12 +21,18 @@ export class CharactersController {
   }
 
   @Post(':id/board/:starshipId')
-  boardToStarship(@Param('id') id: number, @Param('starshipId') starshipId: number) {
+  boardToStarship(
+    @Param('id') id: number,
+    @Param('starshipId') starshipId: number,
+  ) {
     return this.charactersService.boardToStarship(id, starshipId);
   }
 
   @Post(':id/disembark/:starshipId')
-  disembarkFromStarship(@Param('id') id: number, @Param('starshipId') starshipId: number) {
+  disembarkFromStarship(
+    @Param('id') id: number,
+    @Param('starshipId') starshipId: number,
+  ) {
     return this.charactersService.disembarkFromStarship(id, starshipId);
   }
 

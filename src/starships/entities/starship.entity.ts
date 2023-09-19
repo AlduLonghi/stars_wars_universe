@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -21,11 +22,10 @@ export class Starship {
   @Column()
   current_location: string;
 
-  @OneToMany(() => Character, (character) => character.starship, {
-    eager: true,
-  })
+  @OneToMany(() => Character, (character) => character.starship)
   passengers: Character[];
 
-  @ManyToMany(() => Starship, (starship) => starship.enemies)
+  @ManyToMany(() => Starship)
+  @JoinTable()
   enemies: Starship[];
 }

@@ -20,14 +20,13 @@ describe('CharactersService', () => {
     createQueryBuilder: jest.fn(),
   };
   let service: CharactersService;
-  let characterRepository: Repository<Character>
-  let planetRepository: Repository<Planet>
-  let starshipRepository: Repository<Starship>
+  let characterRepository: Repository<Character>;
+  let planetRepository: Repository<Planet>;
+  let starshipRepository: Repository<Starship>;
 
-  
   const REPOSITORY_TOKEN = getRepositoryToken(Character);
-  const PLANET_REPOSITORY_TOKEN = getRepositoryToken(Planet)
-  const STARSHIP_REPOSITORY_TOKEN = getRepositoryToken(Starship)
+  const PLANET_REPOSITORY_TOKEN = getRepositoryToken(Planet);
+  const STARSHIP_REPOSITORY_TOKEN = getRepositoryToken(Starship);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,24 +34,26 @@ describe('CharactersService', () => {
         CharactersService,
         Services,
         {
-            provide: REPOSITORY_TOKEN,
-            useValue: mockRepository
+          provide: REPOSITORY_TOKEN,
+          useValue: mockRepository,
         },
         {
-            provide: PLANET_REPOSITORY_TOKEN,
-            useValue: mockRepository
+          provide: PLANET_REPOSITORY_TOKEN,
+          useValue: mockRepository,
         },
         {
-            provide: STARSHIP_REPOSITORY_TOKEN,
-            useValue: mockRepository
-        }
-    ],
+          provide: STARSHIP_REPOSITORY_TOKEN,
+          useValue: mockRepository,
+        },
+      ],
     }).compile();
 
     service = module.get<CharactersService>(CharactersService);
-    characterRepository = module.get<Repository<Character>>(REPOSITORY_TOKEN)
-    planetRepository = module.get<Repository<Planet>>(PLANET_REPOSITORY_TOKEN)
-    starshipRepository = module.get<Repository<Starship>>(STARSHIP_REPOSITORY_TOKEN)
+    characterRepository = module.get<Repository<Character>>(REPOSITORY_TOKEN);
+    planetRepository = module.get<Repository<Planet>>(PLANET_REPOSITORY_TOKEN);
+    starshipRepository = module.get<Repository<Starship>>(
+      STARSHIP_REPOSITORY_TOKEN,
+    );
   });
 
   it('should be defined', () => {
@@ -64,7 +65,7 @@ describe('CharactersService', () => {
       const character: CreateCharacterDto = {
         name: 'Yoda',
         sensitivity_to_the_force: 'medium',
-        species: 'jedi'
+        species: 'jedi',
       };
 
       await service.create(character);
@@ -75,22 +76,20 @@ describe('CharactersService', () => {
 
   describe('find all characters', () => {
     it('should find all characters', async () => {
-        const character: Character = {
-            id: 12,
-            name: 'Yoda',
-            sensitivity_to_the_force: 'medium',
-            species: 'jedi',
-            current_location: new Planet,
-            starship: new Starship,
-        };
+      const character: Character = {
+        id: 12,
+        name: 'Yoda',
+        sensitivity_to_the_force: 'medium',
+        species: 'jedi',
+        current_location: new Planet(),
+        starship: new Starship(),
+      };
 
+      mockRepository.find.mockReturnValueOnce({ character });
+      const response = await service.findAll();
 
-        mockRepository.find.mockReturnValueOnce({ character });
-        const response = await service.findAll();
-
-        expect(response).toStrictEqual({ character });
-
-      });
+      expect(response).toStrictEqual({ character });
+    });
 
     it('should fail when find all characters is empty', async () => {
       mockRepository.find.mockReturnValueOnce([]);
@@ -98,7 +97,7 @@ describe('CharactersService', () => {
 
       try {
         response = await service.findAll();
-      } catch(error) {
+      } catch (error) {
         expect(error).toBeDefined();
       }
     });
@@ -106,20 +105,20 @@ describe('CharactersService', () => {
 
   describe('find one', () => {
     it('should find one character by id', async () => {
-        const character: Character = {
-            id: 12,
-            name: 'Yoda',
-            sensitivity_to_the_force: 'medium',
-            species: 'jedi',
-            current_location: new Planet,
-            starship: new Starship,
-        };
+      const character: Character = {
+        id: 12,
+        name: 'Yoda',
+        sensitivity_to_the_force: 'medium',
+        species: 'jedi',
+        current_location: new Planet(),
+        starship: new Starship(),
+      };
       const id = 12;
 
-      jest.spyOn(characterRepository, 'findOneBy').mockResolvedValue(character)
+      jest.spyOn(characterRepository, 'findOneBy').mockResolvedValue(character);
 
       const response = await service.findOne(id);
-      expect(response).toEqual(character)
+      expect(response).toEqual(character);
       expect(characterRepository.findOneBy).toHaveBeenCalled();
     });
   });
@@ -139,20 +138,20 @@ describe('CharactersService', () => {
 
   describe('relocate character', () => {
     it('should update by id', async () => {
-        const character: Character = {
-            id: 12,
-            name: 'Yoda',
-            sensitivity_to_the_force: 'medium',
-            species: 'jedi',
-            current_location: new Planet,
-            starship: new Starship,
-        };
+      const character: Character = {
+        id: 12,
+        name: 'Yoda',
+        sensitivity_to_the_force: 'medium',
+        species: 'jedi',
+        current_location: new Planet(),
+        starship: new Starship(),
+      };
 
       const id = 12;
       const planetId = 13;
 
-      jest.spyOn(characterRepository, 'findOneBy').mockResolvedValue(character)
-      jest.spyOn(planetRepository, 'findOneBy').mockResolvedValue(new Planet)
+      jest.spyOn(characterRepository, 'findOneBy').mockResolvedValue(character);
+      jest.spyOn(planetRepository, 'findOneBy').mockResolvedValue(new Planet());
 
       await service.relocateCharacter(id, planetId);
       expect(planetRepository.update).toHaveBeenCalled();
@@ -187,18 +186,18 @@ describe('CharactersService', () => {
         id: 2,
         name: 'name',
         cargo_capacity: 10,
-        current_location:'',
+        current_location: '',
         passengers: [],
-        enemies: []
-      }
+        enemies: [],
+      };
 
       const character: Character = {
         id: 12,
         name: 'name',
         species: 'species',
         sensitivity_to_the_force: 'high',
-        starship: starship
-      }
+        starship: starship,
+      };
 
       mockRepository.createQueryBuilder.mockReturnValueOnce({
         where: jest.fn().mockReturnThis(),
@@ -210,5 +209,4 @@ describe('CharactersService', () => {
       expect(characterRepository.update).toHaveBeenCalled();
     });
   });
-
 });

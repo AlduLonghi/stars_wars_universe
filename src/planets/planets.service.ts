@@ -4,8 +4,7 @@ import { UpdatePlanetDto } from './dto/update-planet.dto';
 import { Planet } from './entities/planet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Services } from 'src/common/services/services';
-
+import { Services } from '../common/services/services';
 
 @Injectable()
 export class PlanetsService {
@@ -14,7 +13,7 @@ export class PlanetsService {
     private readonly planetRepository: Repository<Planet>,
 
     @Inject(Services)
-    private readonly services: Services, 
+    private readonly services: Services,
   ) {}
 
   async create(createPlanetDto: CreatePlanetDto) {
@@ -23,7 +22,11 @@ export class PlanetsService {
   }
 
   async findAll() {
-    const list = await this.planetRepository.find()
+    const list = await this.planetRepository
+      .createQueryBuilder('planet')
+      .leftJoinAndSelect('planet.population', 'characters')
+      .loadRelationCountAndMap('planet.population', 'planet.population')
+      .getMany();
     this.services.validateEntity(list, 'Planet');
 
     return list;
@@ -36,14 +39,14 @@ export class PlanetsService {
       .leftJoinAndSelect('planet.population', 'characters')
       .loadRelationCountAndMap('planet.population', 'planet.population')
       .getOne();
-    
-    this.services.validateEntity(planet, 'Planet', id)
+
+    this.services.validateEntity(planet, 'Planet', id);
 
     return planet;
   }
 
   async update(id: number, updatePlanetDto: UpdatePlanetDto) {
-    const planet = await this.planetRepository.findOneBy({ id })
+    const planet = await this.planetRepository.findOneBy({ id });
     this.services.validateEntity(planet, 'Planet');
 
     await this.planetRepository.update(id, updatePlanetDto);
@@ -51,7 +54,7 @@ export class PlanetsService {
   }
 
   async remove(id: number) {
-    const planet = await this.planetRepository.findOneBy({ id })
+    const planet = await this.planetRepository.findOneBy({ id });
     this.services.validateEntity(planet, 'Planet', id);
 
     await this.planetRepository.delete({ id });

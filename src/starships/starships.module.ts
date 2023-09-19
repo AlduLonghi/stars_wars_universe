@@ -9,9 +9,9 @@ import { Services } from 'src/common/services/services';
 
 @Module({
   imports: [
-  TypeOrmModule.forFeature([Starship]),
-  TypeOrmModule.forFeature([Planet]),
-],
+    TypeOrmModule.forFeature([Starship]),
+    TypeOrmModule.forFeature([Planet]),
+  ],
   controllers: [StarshipsController],
   providers: [StarshipsService, Coordinates, Services],
 })

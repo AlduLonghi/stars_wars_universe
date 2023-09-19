@@ -1,6 +1,6 @@
 import { Starship } from '../entities/starship.entity';
 import { IsString, Length, IsInt, IsOptional } from 'class-validator';
-import { IsValidCoordinatesFormat } from 'src/common/decorators/coordinates.decorator';
+import { IsValidCoordinatesFormat } from '../../common/decorators/coordinates.decorator';
 
 export class CreateStarshipDto {
   @IsString()
