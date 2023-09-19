@@ -18,6 +18,7 @@ describe('CharactersService', () => {
     update: jest.fn(),
     findOneBy: jest.fn(),
     createQueryBuilder: jest.fn(),
+    remove: jest.fn(),
   };
   let service: CharactersService;
   let characterRepository: Repository<Character>;
@@ -158,7 +159,7 @@ describe('CharactersService', () => {
       const id = 12;
 
       await service.remove(id);
-      expect(planetRepository.delete).toHaveBeenCalled();
+      expect(planetRepository.remove).toHaveBeenCalled();
     });
   });
 

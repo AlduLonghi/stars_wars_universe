@@ -22,10 +22,14 @@ export class Starship {
   @Column()
   current_location: string;
 
-  @OneToMany(() => Character, (character) => character.starship)
+  @OneToMany(() => Character, (character) => character.starship, {
+    onDelete: 'CASCADE',
+  })
   passengers: Character[];
 
-  @ManyToMany(() => Starship)
+  @ManyToMany(() => Starship, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   enemies: Starship[];
 }

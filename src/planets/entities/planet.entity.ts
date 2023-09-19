@@ -15,7 +15,9 @@ export class Planet {
   @Column()
   terrain: string;
 
-  @OneToMany(() => Character, (character) => character.current_location)
+  @OneToMany(() => Character, (character) => character.current_location, {
+    onDelete: 'CASCADE',
+  })
   population: Character[];
 
   @Column()

@@ -83,7 +83,11 @@ $ yarn run start
 
 2. Use [localhost:3000/star-wars](localhost:3000/star-wars) to accesing the features.
 
+> **Note**
+> You can use a Data Visualization Tool such as [Table Plus](https://tableplus.com/) for better DB managing.
+
 ## API Endpoints
 
 - Once you have the app up and running, go to [localhost:3000/swagger](localhost:3000/swagger) and check the different endpoints and schemas available.
+
 
