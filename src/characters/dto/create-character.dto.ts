@@ -1,5 +1,4 @@
-import { IsString, Length, IsIn, IsOptional, IsInt } from 'class-validator';
-import { Planet } from '../../planets/entities/planet.entity';
+import { IsString, Length, IsIn } from 'class-validator';
 
 const sensitivity = ['low', 'medium', 'high'];
 
@@ -14,8 +13,4 @@ export class CreateCharacterDto {
 
   @IsIn(sensitivity)
   sensitivity_to_the_force: string;
-
-  @IsOptional()
-  @IsInt()
-  current_location?: Planet;
 }

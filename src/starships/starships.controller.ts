@@ -11,7 +11,9 @@ import { StarshipsService } from './starships.service';
 import { CreateStarshipDto } from './dto/create-starship.dto';
 import { UpdateStarshipDto } from './dto/update-starship.dto';
 import { GetEnemiesDto } from './dto/get-enemies.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Starships')
 @Controller('starships')
 export class StarshipsController {
   constructor(private readonly starshipsService: StarshipsService) {}

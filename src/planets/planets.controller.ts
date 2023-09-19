@@ -10,7 +10,9 @@ import {
 import { PlanetsService } from './planets.service';
 import { CreatePlanetDto } from './dto/create-planet.dto';
 import { UpdatePlanetDto } from './dto/update-planet.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Planets')
 @Controller('planets')
 export class PlanetsController {
   constructor(private readonly planetsService: PlanetsService) {}
