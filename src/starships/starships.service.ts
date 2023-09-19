@@ -108,7 +108,7 @@ export class StarshipsService {
     this.services.validateEntity(starship, 'Starship', id);
 
     const enemy = await this.starshipRepository.findOne({
-      where: { id: id },
+      where: { id: enemyId },
       relations: {
         enemies: true,
       },
@@ -158,7 +158,7 @@ export class StarshipsService {
     const starship = await this.starshipRepository.findOneBy({ id });
     this.services.validateEntity(starship, 'Starship', id);
 
-    await this.starshipRepository.delete(id);
+    await this.starshipRepository.remove(starship);
 
     return this.services.message(`Starship ${id} successfull deleted`);
   }

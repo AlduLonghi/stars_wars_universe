@@ -21,6 +21,7 @@ describe('StarshipsService', () => {
     createQueryBuilder: jest.fn(),
     setEnemy: jest.fn(),
     findOne: jest.fn(),
+    remove: jest.fn(),
   };
   let service: StarshipsService;
   let starshipsRepository: Repository<Starship>;
@@ -124,7 +125,7 @@ describe('StarshipsService', () => {
       jest.spyOn(starshipsRepository, 'findOneBy').mockResolvedValue(starship);
 
       await service.remove(id);
-      expect(starshipsRepository.delete).toHaveBeenCalled();
+      expect(starshipsRepository.remove).toHaveBeenCalled();
     });
   });
 

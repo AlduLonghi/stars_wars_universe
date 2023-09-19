@@ -18,6 +18,7 @@ describe('PlanetsService', () => {
     findOneBy: jest.fn(),
     createQueryBuilder: jest.fn(),
     getMany: jest.fn(),
+    remove: jest.fn(),
   };
 
   let service: PlanetsService;
@@ -55,7 +56,7 @@ describe('PlanetsService', () => {
     expect(planetRepository).toBeDefined();
   });
 
-  describe('create planet', () => {
+  describe('create', () => {
     it('should create a new planet', async () => {
       const planet: CreatePlanetDto = {
         name: 'tatooine',
@@ -69,7 +70,7 @@ describe('PlanetsService', () => {
     });
   });
 
-  describe('find all planets', () => {
+  describe('findAll', () => {
     it('should find all planets', async () => {
       mockPlanetRepository.createQueryBuilder.mockReturnValueOnce({
         leftJoinAndSelect: jest.fn().mockReturnThis(),
@@ -92,7 +93,7 @@ describe('PlanetsService', () => {
     });
   });
 
-  describe('find one', () => {
+  describe('findOne', () => {
     it('should find one by id', async () => {
       const id = 12;
 
@@ -128,7 +129,7 @@ describe('PlanetsService', () => {
       const id = 12;
 
       await service.remove(id);
-      expect(planetRepository.delete).toHaveBeenCalled();
+      expect(planetRepository.remove).toHaveBeenCalled();
     });
   });
 });

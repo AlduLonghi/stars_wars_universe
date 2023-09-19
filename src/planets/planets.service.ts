@@ -57,7 +57,7 @@ export class PlanetsService {
     const planet = await this.planetRepository.findOneBy({ id });
     this.services.validateEntity(planet, 'Planet', id);
 
-    await this.planetRepository.delete({ id });
+    await this.planetRepository.remove(planet);
     return this.services.message(`Planet ${id} successfully deleted`);
   }
 }

@@ -18,6 +18,7 @@ export class Character {
 
   @ManyToOne(() => Planet, (planet) => planet.population, {
     eager: true,
+    onDelete: 'CASCADE',
   })
   current_location?: Planet;
 

@@ -48,7 +48,7 @@ export class CharactersService {
     this.services.validateEntity(character, 'Character', id);
 
     await this.characterRepository.update(id, updateCharacterDto);
-    return this.services.message(`Character ${id} successfully updated`);
+    return this.services.message(`Character ${id} succesfully updated`);
   }
 
   async relocateCharacter(id: number, planetId: number) {
@@ -109,7 +109,7 @@ export class CharactersService {
     const character = await this.characterRepository.findOneBy({ id });
     this.services.validateEntity(character, 'Character', id);
 
-    await this.characterRepository.delete({ id });
+    await this.characterRepository.remove(character);
     return this.services.message(`Character ${id} succesfully deleted`);
   }
 }
