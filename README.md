@@ -43,7 +43,7 @@ Backend system that simulates the vast and intriguing Star Wars universe. The cr
 
 ## How to use
 
-### Prequisites
+### Prerequisites
 
 #### Installed locally:
 
